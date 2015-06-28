@@ -257,7 +257,7 @@ int main(){
   int pos=0;
   for(int i=0;i<s.length()-1;i++){
     if(i%2){
-      int npos=np1(pos,i);
+      int npos=np2(pos,i);
       cout<<change(pos,npos);
       cout<<change(m[pos],s[i]);
       cout<<".";
