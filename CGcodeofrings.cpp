@@ -1,7 +1,8 @@
 //God & me //ya mahdi adrekni
 #include <iostream>
-#include <algorithm>
+#include <vector>
 #include <string>
+#include <cmath>
 #define pb push_back
 using namespace std;
 inline char next(char &c){
@@ -114,9 +115,8 @@ inline int mi(int &a,int &b){//operator -
   return ((a-b)+30)%30;
 }
 inline int np1(int pos,int st){
-  int mini=dis(s[st],m[pos]);
+  int mini=dis(s[st],m[pos]),npos=pos;
   int sta=mi(pos,mini),en=pl(pos,mini);
-  //cerr<<st<<" "<<pos<<" "<<mini<<" "<<sta<<" "<<en<<endl;//<<-----------------------------------
   for(int i=sta;i!=en;i=pl(i,1)){
     if(dis(i,pos)+dis(s[st],m[i])<mini || (dis(i,pos)+dis(s[st],m[i])==mini && count(m[pos])>count(npos)))
       mini=dis(i,pos)+dis(s[st],m[i]),npos=i;
@@ -124,16 +124,18 @@ inline int np1(int pos,int st){
   return npos;
 }
 inline int np2(int pos,int st){
-  int mini=1e9;
-  for(int i=0;i<30;i++)
+  int mini=dis(s[st],m[pos]),npos=pos;
+  int sta=mi(pos,mini),en=pl(pos,mini);
+  for(int i=sta;i!=en;i=pl(i,1))
     for(int j=0;j<30;j++)
       if(mini>dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]) && count(m[pos])>count(npos))
 	npos=i,mini=dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]);
   return npos;
 }
 inline int np3(int pos,int st){
-  int mini=1e9;
-  for(int i=0;i<30;i++)
+  int mini=dis(s[st],m[pos]),npos=pos;
+  int sta=mi(pos,mini),en=pl(pos,mini);
+  for(int i=sta;i!=en;i=pl(i,1))
     for(int j=0;j<30;j++)
       for(int k=0;k<30;k++)
 	if(mini>dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j])+dis(j,k)+((st+2 != n)?dis(s[st+2],m[j]):0) && count(m[pos])>count(npos))
@@ -155,6 +157,36 @@ int main(){
     y += ".";
   }
   yL = y.length();
+  for(int k = 1; k < 4; k++) {
+    for(int ank = 0; ank < k; ank++) {
+      s = bs;
+      m="                              ";
+      x="";
+      for(int i=0;i<n-1;i++){
+	if(i % k == ank){
+	  npos=np1(pos,i);
+	  x += change(pos,npos);
+	  x += change(m[pos],s[i]);
+	  x += ".";
+	}
+	else{
+	  npos=np3(pos,i);
+	  x += change(pos,npos);
+	  x += change(m[pos],s[i]);
+	  x += ".";
+	}
+      }
+ 
+      int i=s.length()-1;
+      npos=np1(pos,i);
+      x += change(pos,npos);
+      x += change(m[pos],s[i]);
+      x += ".";
+ 
+      if(x.length() < yL)
+	y = x;
+    }
+  }
   for(int k = 1; k < 4; k++) {
     for(int ank = 0; ank < k; ank++) {
       s = bs;
