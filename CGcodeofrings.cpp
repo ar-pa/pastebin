@@ -101,20 +101,13 @@ int dis(int a,int b){
   return min(r1,r2);
 }
 string s,m="                              ";
-int count(char c){
-  int r=0;
-  for(int i=0;i<30;i++)
-    if(m[i]==c)
-      r++;
-  return r;
-}
 int main(){
   getline(cin,s);
   int pos=0;
   for(int i=0;i<s.length();i++){
     int mini=1e9,npos;
     for(int j=0;j<30;j++)
-      if(dis(j,pos)+dis(s[i],m[j])<mini || (dis(j,pos)+dis(s[i],m[j])==mini && count(m[j])>count(npos)))
+      if(dis(j,pos)+dis(s[i],m[j])<mini)
 	mini=dis(j,pos)+dis(s[i],m[j]),npos=j;
     change(pos,npos);
     change(m[pos],s[i]);
