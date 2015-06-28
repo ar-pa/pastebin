@@ -4,7 +4,7 @@
 #include <string>
 #define pb push_back
 using namespace std;
-char next(char &c){
+inline char next(char &c){
   if(c==' ')
     c='A';
   else if(c=='Z')
@@ -13,7 +13,7 @@ char next(char &c){
     c++;
   return '+';
 }
-char prev(char &c){
+inline char prev(char &c){
   if(c==' ')
     c='Z';
   else if(c=='A')
@@ -22,12 +22,12 @@ char prev(char &c){
     c--;
   return '-';
 }
-char next(int &a){
+inline char next(int &a){
   a++;
   a%=30;
   return '>';
 }
-char prev(int &a){
+inline char prev(int &a){
   a--;
   if(a==-1)
     a=29;
@@ -88,6 +88,7 @@ string change(int &a,int &b){
 	r+=prev(a);
   return r;
 }
+int pos,n;
 string s,m="                              ";
 int count(char c){
   int r=0;
@@ -97,53 +98,76 @@ int count(char c){
   return r;
 }
 inline int dis(char &c,char &t){
-  return min(max(t==' '?0:t-'A'+1,c==' '?0:c-'A'+1)-min(t==' '?0:t-'A'+1,c==' '?0:c-'A'+1),27-max(t==' '?0:t-'A'+1,c==' '?0:c-'A'+1)+min(t==' '?0:t-'A'+1,c==' '?0:c-'A'+1));
+  return min(max((t==' '?0:t-'A'+1),(c==' '?0:c-'A'+1))-min((t==' '?0:t-'A'+1),(c==' '?0:c-'A'+1)),27-max((t==' '?0:t-'A'+1),(c==' '?0:c-'A'+1))+min((t==' '?0:t-'A'+1),(c==' '?0:c-'A'+1)));
 }
 inline int dis(int &a,int &b){
   return min(max(a,b)-min(a,b),30-max(a,b)+min(a,b));
+} 
+int npos;
+inline int pl(int &a,int &b){//operator +
+  return (a+b)%30;
 }
-int np1(int &pos,int &st){
-  int mini=1e9,npos;
-  for(int i=0;i<30;i++)
+inline int pl(int &a,bool b){//operator + 
+  return (a+b)%30;
+}
+inline int mi(int &a,int &b){//operator -
+  return ((a-b)+30)%30;
+}
+inline int np1(int pos,int st){
+  int mini=dis(s[st],m[pos]);
+  int sta=mi(pos,mini),en=pl(pos,mini);
+  cerr<<st<<" "<<pos<<" "<<mini<<" "<<sta<<" "<<en<<endl;//<<-----------------------------------
+  for(int i=sta;i!=en;i=pl(i,1)){
     if(dis(i,pos)+dis(s[st],m[i])<mini || (dis(i,pos)+dis(s[st],m[i])==mini && count(m[pos])>count(npos)))
       mini=dis(i,pos)+dis(s[st],m[i]),npos=i;
+  }
   return npos;
 }
-int np2(int &pos,int &st){
-  int mini=1e9,npos;
+inline int np2(int pos,int st){
+  int mini=1e9;
   for(int i=0;i<30;i++)
     for(int j=0;j<30;j++)
       if(mini>dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]) && count(m[pos])>count(npos))
 	npos=i,mini=dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]);
   return npos;
 }
+inline int np3(int pos,int st){
+  int mini=1e9;
+  for(int i=0;i<30;i++)
+    for(int j=0;j<30;j++)
+      for(int k=0;k<30;k++)
+	if(mini>dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j])+dis(j,k)+((st+2 != n)?dis(s[st+2],m[j]):0) && count(m[pos])>count(npos))
+	  npos=i,mini=dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j])+dis(j,k)+((st+2 != n)?dis(s[st+2],m[j]):0);
+  return npos;
+}
+string bs = s;
+string x = "", y = "";
 int main(){
+  ios::sync_with_stdio(0);
   getline(cin,s);
-  string bs = s;
-  int pos=0;
-  string x = "", y = "";
+  pos=0, n = s.length();
   int yL;
-  for(int i = 0; i < s.length();i++) {
-    int npos=np1(pos,i);
+  for(int i = 0; i < n;i++) {
+    npos=np1(pos,i);
     y += change(pos,npos);
     y += change(m[pos],s[i]);
     y += ".";
   }
   yL = y.length();
-  for(int k = 1; k < 3; k++) {
+  for(int k = 1; k < 4; k++) {
     for(int ank = 0; ank < k; ank++) {
       s = bs;
       m="                              ";
       x="";
-      for(int i=0;i<s.length()-1;i++){
+      for(int i=0;i<n-1;i++){
 	if(i % k == ank){
-	  int npos=np2(pos,i);
+	  npos=np1(pos,i);
 	  x += change(pos,npos);
 	  x += change(m[pos],s[i]);
 	  x += ".";
 	}
 	else{
-	  int npos=np1(pos,i);
+	  npos=np2(pos,i);
 	  x += change(pos,npos);
 	  x += change(m[pos],s[i]);
 	  x += ".";
@@ -151,7 +175,7 @@ int main(){
       }
  
       int i=s.length()-1;
-      int npos=np1(pos,i);
+      npos=np1(pos,i);
       x += change(pos,npos);
       x += change(m[pos],s[i]);
       x += ".";
