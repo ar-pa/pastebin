@@ -104,6 +104,7 @@ inline int dis(char &c,char &t){
 inline int dis(int &a,int &b){
   return min(abs(a-b),30-(abs(a-b)));
 }
+ 
 int npos;
 inline int pl(int &a,int &b){//operator +
   return (a+b)%30;
@@ -115,7 +116,7 @@ inline int mi(int &a,int &b){//operator -
   return ((a-b)+30)%30;
 }
 inline int np1(int pos,int st){
-  int mini=dis(s[st],m[pos]),npos=pos;
+  int mini=dis(s[st],m[pos]);
   int sta=mi(pos,mini),en=pl(pos,mini);
   for(int i=sta;i!=en;i=pl(i,1)){
     if(dis(i,pos)+dis(s[st],m[i])<mini || (dis(i,pos)+dis(s[st],m[i])==mini && count(m[pos])>count(npos)))
@@ -183,8 +184,10 @@ int main(){
       x += change(m[pos],s[i]);
       x += ".";
  
-      if(x.length() < yL)
+      if(x.length() < yL) {
 	y = x;
+	yL = x.length();
+      }
     }
   }
   for(int k = 1; k < 4; k++) {
@@ -213,8 +216,10 @@ int main(){
       x += change(m[pos],s[i]);
       x += ".";
  
-      if(x.length() < yL)
+      if(x.length() < yL) {
 	y = x;
+	yL = x.length();
+      }
     }
   }
   cout<<y<<endl;
