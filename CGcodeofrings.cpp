@@ -103,7 +103,6 @@ inline int dis(char &c,char &t){
 inline int dis(int &a,int &b){
   return min(max(a,b)-min(a,b),30-max(a,b)+min(a,b));
 } 
-int npos;
 inline int pl(int &a,int &b){//operator +
   return (a+b)%30;
 }
@@ -113,18 +112,22 @@ inline int pl(int &a,bool b){//operator +
 inline int mi(int &a,int &b){//operator -
   return ((a-b)+30)%30;
 }
+int npos;
 inline int np1(int pos,int st){
   int mini=dis(s[st],m[pos]);
+  npos=pos;
   int sta=mi(pos,mini),en=pl(pos,mini);
-  cerr<<st<<" "<<pos<<" "<<mini<<" "<<sta<<" "<<en<<endl;//<<-----------------------------------
+  cerr<<st<<" "<<pos<<" "<<mini<<" "<<sta<<" "<<en<<endl;
   for(int i=sta;i!=en;i=pl(i,1)){
     if(dis(i,pos)+dis(s[st],m[i])<mini || (dis(i,pos)+dis(s[st],m[i])==mini && count(m[pos])>count(npos)))
       mini=dis(i,pos)+dis(s[st],m[i]),npos=i;
   }
+  cerr<<npos<<endl;
   return npos;
 }
 inline int np2(int pos,int st){
   int mini=1e9;
+  npos=pos;
   for(int i=0;i<30;i++)
     for(int j=0;j<30;j++)
       if(mini>dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]) && count(m[pos])>count(npos))
@@ -133,6 +136,7 @@ inline int np2(int pos,int st){
 }
 inline int np3(int pos,int st){
   int mini=1e9;
+  npos=pos;
   for(int i=0;i<30;i++)
     for(int j=0;j<30;j++)
       for(int k=0;k<30;k++)
@@ -173,7 +177,6 @@ int main(){
 	  x += ".";
 	}
       }
- 
       int i=s.length()-1;
       npos=np1(pos,i);
       x += change(pos,npos);
@@ -187,3 +190,21 @@ int main(){
   cout<<y<<endl;
   return 0;
 }
+
+/*int main(){
+  string s,m="                              ";
+  getline(cin,s);
+  int pos=0;
+  for(int i=0;i<s.length();i++){
+    int mini=1e9,npos;
+    for(int j=0;j<30;j++)
+      if(dis(j,pos)+dis(s[i],m[j])<mini)
+	mini=dis(j,pos)+dis(s[i],m[j]),npos=j;
+    cout<<change(pos,npos);
+    cout<<change(m[pos],s[i]);
+    cout<<".";
+  }
+  cout<<endl;
+  return 0;
+}
+*/
