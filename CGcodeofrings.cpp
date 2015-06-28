@@ -132,7 +132,7 @@ int main(){
   return 0;
 }
 */
-//NEW CODE
+//NEW CODE & have a same time with OLD CODE
 //God & me // ya mahdi adrekni
 #include <iostream>
 #include <vector>
@@ -248,7 +248,7 @@ int np2(int pos,int st){
   int mini=1e9,npos;
   for(int i=0;i<30;i++)
     for(int j=0;j<30;j++)
-      if(mini>dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]))
+      if(mini>dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]) && count(m[pos])>count(npos))
 	npos=i,mini=dis(pos,i)+dis(s[st],m[i])+dis(i,j)+dis(s[st+1],m[j]);
   return npos;
 }
@@ -256,10 +256,18 @@ int main(){
   getline(cin,s);
   int pos=0;
   for(int i=0;i<s.length()-1;i++){
-    int npos=np2(pos,i);
-    cout<<change(pos,npos);
-    cout<<change(m[pos],s[i]);
-    cout<<".";
+    if(i%2){
+      int npos=np1(pos,i);
+      cout<<change(pos,npos);
+      cout<<change(m[pos],s[i]);
+      cout<<".";
+    }
+    else{
+      int npos=np1(pos,i);
+      cout<<change(pos,npos);
+      cout<<change(m[pos],s[i]);
+      cout<<".";
+    }
   }
   {
     int i=s.length()-1;
